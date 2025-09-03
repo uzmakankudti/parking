@@ -4,7 +4,7 @@ import asyncHandler from "express-async-handler";
 
 export const addUser = asyncHandler(async (req, res) => {
     try {
-        const { username, address, email, phoneNumber } = req.body;
+        const { username, address, email, phoneNumber, hobbies } = req.body;
         if (!username || !address || !email || !phoneNumber) {
             return res.status(400).json({
                 success: false,
@@ -20,7 +20,8 @@ export const addUser = asyncHandler(async (req, res) => {
             username,
             address,
             email,
-            phoneNumber
+            phoneNumber,
+            hobbies
         });
         return res.status(200).json({
             success: true,
