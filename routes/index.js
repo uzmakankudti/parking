@@ -9,5 +9,6 @@ const router = expressRouter();
 router.use("/user",userRouter);
 router.use("/slot",slotRouter);
 router.use("/vehicle",vehicleRouter);
+router.use("/owner",ownerRouter);
 
 export default router;
