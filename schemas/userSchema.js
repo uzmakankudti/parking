@@ -5,6 +5,10 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    gender:{
+        type:String,
+        enum:["MALE","FEMALE","OTHER"]
+    },
     address: {
         type: String,
         required: true,
