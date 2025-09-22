@@ -1,10 +1,11 @@
 import User from "../schemas/userSchema.js";
+import bcrypt from "bcryptjs";
 import asyncHandler from "express-async-handler";
 
 
 export const addUser = asyncHandler(async (req, res) => {
     try {
-        const { username, address, email, phoneNumber, hobbies, gender } = req.body;
+        const { username, address, email, phoneNumber, hobbies, gender, password } = req.body;
         if (!username || !address || !email || !phoneNumber) {
             return res.status(400).json({
                 success: false,
@@ -16,18 +17,30 @@ export const addUser = asyncHandler(async (req, res) => {
                 success: false,
                 message: "user already exists with email"
             });
-        } const newUser = await User.create({
+        }
+        // 3. Hash password before saving
+        const salt = await bcrypt.genSalt(10); // generate salt (10 rounds)
+        const hashedPassword = await bcrypt.hash(password, salt);
+        const newUser = await User.create({
             username,
             address,
             email,
             phoneNumber,
             hobbies,
-            gender
+            gender,
+            password:hashedPassword
         });
         return res.status(200).json({
             success: true,
             message: "user created successfully",
-            data: newUser
+            data: {
+                username: newUser.username,
+                address: newUser.address,
+                email: newUser.address,
+                phoneNumber: newUser.phoneNumber,
+                hobbies: newUser.hobbies,
+                gender: newUser.gender
+            }
         })
     } catch (error) {
         console.log(error);
@@ -105,7 +118,7 @@ export const getAllUser = asyncHandler(async (req, res) => {
 
         // 2. Calculate how many docs to skip
         const skip = (page - 1) * pageSize;
-        
+
         const totalDocuments = await User.countDocuments();
 
         const user = await User.find({})
@@ -113,13 +126,13 @@ export const getAllUser = asyncHandler(async (req, res) => {
             .skip(skip)
             .limit(pageSize);
 
-         const totalPages = Math.ceil(totalDocuments / pageSize);
+        const totalPages = Math.ceil(totalDocuments / pageSize);
 
         return res.status(200).json({
             success: true,
             message: "all user",
             data: user,
-            meta:{
+            meta: {
                 page,
                 pageSize,
                 totalPages
