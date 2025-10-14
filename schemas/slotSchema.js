@@ -5,7 +5,6 @@ const slotSchema=new mongoose.Schema({
         unique:true,
         required:true,
     },
-    level:{type:String},
     isOccupied:{
         type:Boolean,
         default:false,

@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
-import Vehicle from "./vehicleSchema";
 const bookingSchema=new mongoose.Schema({
-    owner:{
+    User:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",
         required:true,
@@ -11,7 +10,7 @@ const bookingSchema=new mongoose.Schema({
         ref:"Vehicle",
         required:true,
     },
-    slot:{
+    Slot:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Slot",
         required:true,
@@ -26,6 +25,10 @@ const bookingSchema=new mongoose.Schema({
         default:"CASH",
         required:true,
     },
+    PaymentStatus:{
+        type:String,
+        enum:["COMPLETED","PENDING"]
+    },
     entryDate:{
         type:Date,
         default:Date.now,
@@ -33,7 +36,7 @@ const bookingSchema=new mongoose.Schema({
     },
     exitDate:{
         type:Date,
-        default:date,
+        default:Date.now,
         required:true,
     },
 });

@@ -23,12 +23,14 @@ export const addVehicle = asyncHandler(async (req, res) => {
         });
         return res.status(201).json({
             success: true,
-            message: "vehicle created"
+            message: "vehicle created",
+            data: vehicle
         });
     } catch (error) {
         return res.status(500).json({
             success: false,
-            message: "server error"
+            message: "server error",
+            error: error.message
         });
     }
 });
@@ -82,14 +84,14 @@ export const getVehicleById = asyncHandler(async (req, res) => {
 export const updateVehicleById = asyncHandler(async (req, res) => {
     try {
         const { vehicleID } = req.params;
-        const { name, number, type } = req.body;
+        const { name, number } = req.body;
         if (!vehicleID) {
             return res.status(404).json({
                 success: false,
                 message: "vehicle Id is required",
             });
         }
-        const vehicle = await Vehicle.findByIdAndUpdate(vehicleID, { name, number, type }, { new: true });
+        const vehicle = await Vehicle.findByIdAndUpdate(vehicleID, { name, number }, { new: true });
         if (!vehicle) {
             return res.status(404).json({
                 success: false,

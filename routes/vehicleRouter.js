@@ -12,7 +12,7 @@ const vehicleRouter = express.Router();
 vehicleRouter.route("/addVehicle").post(addVehicle);
 vehicleRouter.route("/getVehicle").get(getVehicle);
 vehicleRouter.route("/getVehicleById/:id").get(getVehicleById);
-vehicleRouter.route("/updateVehicleById/:vehicleId").post(updateVehicleById);
+vehicleRouter.route("/updateVehicleById/:vehicleID").put(updateVehicleById);
 vehicleRouter.route("/deleteVehicleById/:vehicleId").delete(deleteVehicleById);
 
 export default vehicleRouter;

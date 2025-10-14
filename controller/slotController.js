@@ -3,8 +3,8 @@ import asyncHandler from "express-async-handler";
 
 export const addSlot = asyncHandler(async (req, res) => {
     try {
-        const { slotNumber, level, isOccupied } = req.body;
-        if (!slotNumber || !level || !isOccupied) {
+        const { slotNumber,  isOccupied } = req.body;
+        if (!slotNumber || !isOccupied) {
             return res.status(400).json({
                 success: false,
                 message: "all feilds are required"
@@ -18,7 +18,6 @@ export const addSlot = asyncHandler(async (req, res) => {
         }
         const slot = await Slot.create({
             slotNumber,
-            level,
             isOccupied
         });
         return res.status(200).json({
@@ -85,7 +84,7 @@ export const getSlotById = asyncHandler(async (req, res) => {
 export const updateSlot = asyncHandler(async (req, res) => {
     try {
         const { slotId } = req.params;                       // 📝 get slotId from URL
-        const { slotNumber, level, isOccupied } = req.body;  // 📝 get new data from body
+        const { slotNumber,  isOccupied } = req.body;  // 📝 get new data from body
         if (!slotId) {
             return res.status(400).json({
                 success: false,
@@ -94,7 +93,7 @@ export const updateSlot = asyncHandler(async (req, res) => {
         }
         const slot = await Slot.findByIdAndUpdate(
             slotId,                                         //which slot to update
-            { slotNumber, level, isOccupied },             //what to change
+            { slotNumber,  isOccupied },             //what to change
             { new: true }                                 //return the updated slot, not the old one
         );
         if (!slot) {

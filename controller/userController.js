@@ -68,6 +68,7 @@ export const updateUser = asyncHandler(async (req, res) => {
         user.username = updateData.username || user.username;
         user.email = updateData.email || user.email;
         user.phoneNumber = updateData.phoneNumber || user.phoneNumber;
+        user.gender = updateData.gender || user.gender;
 
         const updateUser = await user.save();
 
@@ -360,3 +361,61 @@ export const genderCountWithInfo = asyncHandler(async (req, res) => {
         }
     }
 } */
+
+export const loginUser = asyncHandler(async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // 1. Check if fields are provided
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and password are required"
+      });
+    }
+
+    // 2. Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid email or password"
+      });
+    }
+
+    // 3. Compare entered password with hashed password in DB
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid email or password"
+      });
+    }
+
+    // 4. (Optional) Generate JWT token here if needed
+    // Example: const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+    // 5. Success response (never send password back)
+    return res.status(200).json({
+      success: true,
+      message: "Login successful",
+      data: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        hobbies: user.hobbies,
+        gender: user.gender
+        // token // if JWT added
+      }
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message
+    });
+  }
+});
